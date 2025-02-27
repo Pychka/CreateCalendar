@@ -1,0 +1,16 @@
+#if ANDROID
+using Android.Content;
+using Android.Provider;
+#endif        #if ANDROID
+            Intent intent = new Intent(Intent.ActionInsert);
+            intent.SetData(CalendarContract.Events.ContentUri);
+
+            intent.PutExtra(CalendarContract.ExtraEventBeginTime, calendar.DateStart.ToLongDateString());
+            intent.PutExtra(CalendarContract.ExtraEventEndTime, calendar.DateEnd.ToLongDateString());
+            intent.PutExtra(CalendarContract.Events.InterfaceConsts.Title, calendar.Title);
+            intent.PutExtra(CalendarContract.Events.InterfaceConsts.Description, calendar.Description);
+
+            var context = Android.App.Application.Context;
+            intent.AddFlags(ActivityFlags.NewTask);
+            context.StartActivity(intent);
+        #endif

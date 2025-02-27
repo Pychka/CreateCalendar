@@ -1,0 +1,29 @@
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class IndexModel : PageModel
+{
+    public List<Event> Events { get; set; } = new();
+    public int Year { get; set; }
+    public int Month { get; set; }
+    public int DaysInMonth { get; set; }
+    public DateTime FirstDayOfMonth { get; set; }
+
+    public void OnGet(int? year, int? month)
+    {
+        Year = year ?? DateTime.Now.Year;
+        Month = month ?? DateTime.Now.Month;
+        FirstDayOfMonth = new DateTime(Year, Month, 1);
+        DaysInMonth = DateTime.DaysInMonth(Year, Month);
+
+        // Добавляем тестовые события
+        Events = new List<Event>
+        {
+            new Event { Date = new DateTime(2024, 5, 4), Description = "Зеленое событие", Color = "green" },
+            new Event { Date = new DateTime(2024, 5, 12), Description = "Желтое событие", Color = "yellow" },
+            new Event { Date = new DateTime(2024, 5, 16), Description = "Красное событие", Color = "red" }
+        };
+    }
+}

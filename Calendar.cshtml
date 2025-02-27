@@ -1,0 +1,66 @@
+@page
+@model IndexModel
+@{
+    var firstDay = (int)Model.FirstDayOfMonth.DayOfWeek;
+    if (firstDay == 0) firstDay = 7; // Перенос воскресенья в конец недели
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Календарь событий</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 300px; margin: auto; border-collapse: collapse; }
+        th, td { width: 40px; height: 40px; text-align: center; border: 1px solid #ddd; }
+        .header { background-color: green; color: white; font-weight: bold; }
+        .prev, .next { cursor: pointer; color: white; }
+        .event { border-radius: 50%; padding: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<h2>Календарь событий</h2>
+<table>
+    <tr class="header">
+        <td class="prev">
+            <a href="?month=@(Model.Month - 1)&year=@(Model.Year)">&#9664;</a>
+        </td>
+        <td colspan="5">@($"{Model.Month:D2} {Model.Year}")</td>
+        <td class="next">
+            <a href="?month=@(Model.Month + 1)&year=@(Model.Year)">&#9654;</a>
+        </td>
+    </tr>
+    <tr>
+        <th>П</th><th>В</th><th>С</th><th>Ч</th><th>П</th><th>С</th><th>В</th>
+    </tr>
+    <tr>
+        @for (int i = 1; i < firstDay; i++)
+        {
+            <td></td>
+        }
+        @for (int day = 1; day <= Model.DaysInMonth; day++)
+        {
+            var date = new DateTime(Model.Year, Model.Month, day);
+            var eventItem = Model.Events.FirstOrDefault(e => e.Date.Date == date.Date);
+            <td>
+                @if (eventItem != null)
+                {
+                    <span class="event" style="background-color:@eventItem.Color;">@day</span>
+                }
+                else
+                {
+                    <span>@day</span>
+                }
+            </td>
+            if ((day + firstDay - 1) % 7 == 0)
+            {
+                @:</tr><tr>
+            }
+        }
+    </tr>
+</table>
+
+</body>
+</html>
